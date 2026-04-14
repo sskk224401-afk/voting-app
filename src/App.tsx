@@ -200,15 +200,14 @@ export default function App() {
 
   const handleAdminLogin = () => {
     if (adminPassword === 'Ss1234567890mnbvcxz@@@') {
-      setView('admin_dashboard');
-      setAdminError('');
-    } else {
-      setAdminError('الرقم السري خاطئ');
-    }
-  };
-
-  const handleCreatePoll = async () => {
-    if (!c1.name || !c2.name || !c1.image || !c2.image) {
+<div className="flex justify-start mb-6">
+  <button 
+    onClick={() => {setView('home'); setPollId(''); setInputCode('');}} 
+    className="text-slate-400 hover:text-blue-600 font-bold text-sm transition-colors"
+  >
+    &rarr; عودة
+  </button>
+</div> {
       setAdminError('يرجى إكمال جميع بيانات وصور المرشحين.');
       return;
     }
