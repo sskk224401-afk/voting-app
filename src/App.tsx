@@ -197,7 +197,7 @@ export default function App() {
       clickTimer.current = setTimeout(() => setSecretClicks(0), 500); 
     }
   };
-  
+
 <div className="flex justify-start mb-6">
   <button 
     onClick={() => {setView('home'); setPollId(''); setInputCode('');}} 
@@ -325,8 +325,8 @@ export default function App() {
                       ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
                       : 'bg-[#10b981] hover:bg-[#059669] text-white shadow-sm'}`}
                 >
-                  <Icons.CheckCircle /> تصويت لهذا
-                </button>
+                  <Icons.CheckCircle /> صوت لـ {pollData.c1.name} 
+              </button>
               </div>
 
               <div className="bg-white rounded-[24px] p-4 shadow-sm border border-slate-100 flex flex-col">
@@ -347,7 +347,7 @@ export default function App() {
                       ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
                       : 'bg-[#0f172a] hover:bg-black text-white shadow-sm'}`}
                 >
-                  <Icons.CheckCircle /> تصويت لهذا
+                  <Icons.CheckCircle /> صوت لـ {pollData.c2.name}
                 </button>
               </div>
             </div>
