@@ -197,9 +197,7 @@ export default function App() {
       clickTimer.current = setTimeout(() => setSecretClicks(0), 500); 
     }
   };
-
-  const handleAdminLogin = () => {
-    if (adminPassword === 'Ss1234567890mnbvcxz@@@') {
+  
 <div className="flex justify-start mb-6">
   <button 
     onClick={() => {setView('home'); setPollId(''); setInputCode('');}} 
@@ -207,12 +205,7 @@ export default function App() {
   >
     &rarr; عودة
   </button>
-</div> {
-      setAdminError('يرجى إكمال جميع بيانات وصور المرشحين.');
-      return;
-    }
-    setIsCreating(true);
-    setAdminError('');
+</div>
     try {
       const code = Math.random().toString(36).substring(2, 7).toUpperCase();
       const pollRef = doc(db, 'polls', code);
