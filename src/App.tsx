@@ -123,11 +123,11 @@ export default function App() {
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        const scale = 500 / img.width; 
-        canvas.width = 500;
+        const scale = 300 / img.width; 
+        canvas.width = 300;
         canvas.height = img.height * scale;
         canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-        setter(prev => ({ ...prev, image: canvas.toDataURL('image/jpeg', 0.8) }));
+        setter(prev => ({ ...prev, image: canvas.toDataURL('image/jpeg', 0.1) }));
       };
       img.src = ev.target.result;
     };
