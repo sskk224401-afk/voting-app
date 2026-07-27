@@ -14,7 +14,7 @@ import {
   increment
 } from 'firebase/firestore';
 
-// 🛑🛑 إعدادات Firebase الخاصة بك 🛑🛑
+// إعدادات قاعدة البيانات الخاصة بك
 const firebaseConfig = {
   apiKey: "AIzaSyDyfqZ7K9R1_l_AIuRVsVCY8BaXgL4Gvcs",
   authDomain: "planning-with-ai-625ee.firebaseapp.com",
@@ -27,18 +27,27 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-const appId = 'my-voting-app-v1';
 
 const Icons = {
-  CheckCircle: () => <svg className="w-5 h-5 inline-block ml-1" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>,
-  Upload: () => <svg className="w-8 h-8 text-slate-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>,
-  Link: () => <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 105.656 5.656l-1.1 1.1" /></svg>,
-  // 🔴 أيقونة النجمة تمت إضافتها هنا
-  Sparkles: () => <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+  CheckCircle: () => (
+    <svg className="w-5 h-5 inline-block ml-1" fill="currentColor" viewBox="0 0 20 20">
+      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+    </svg>
+  ),
+  Upload: () => (
+    <svg className="w-8 h-8 text-slate-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+    </svg>
+  ),
+  Sparkles: () => (
+    <svg className="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+    </svg>
+  )
 };
 
 export default function App() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [authFailed, setAuthFailed] = useState(false);
   
@@ -46,10 +55,11 @@ export default function App() {
   
   const [inputCode, setInputCode] = useState('');
   const [pollId, setPollId] = useState('');
-  const [pollData, setPollData] = useState(null);
+  const [pollData, setPollData] = useState<any>(null);
   const [votes, setVotes] = useState({ person1: 0, person2: 0 });
   const [hasVoted, setHasVoted] = useState(false);
   const [publicError, setPublicError] = useState('');
+  const [voteError, setVoteError] = useState('');
 
   const [adminPassword, setAdminPassword] = useState('');
   const [adminError, setAdminError] = useState('');
@@ -57,10 +67,9 @@ export default function App() {
   const [c2, setC2] = useState({ name: '', image: '', color: 'dark' });
   const [createdCode, setCreatedCode] = useState('');
   const [isCreating, setIsCreating] = useState(false);
-  
   const [secretClicks, setSecretClicks] = useState(0);
   const [copySuccess, setCopySuccess] = useState(false);
-  const clickTimer = useRef(null);
+  const clickTimer = useRef<any>(null);
 
   useEffect(() => {
     let initialLoad = true;
@@ -115,26 +124,29 @@ export default function App() {
     return () => unsub();
   }, [user, view, pollId]);
 
-  const handleImg = (e, setter) => {
-    const file = e.target.files[0];
+  const handleImg = (e: any, setter: any) => {
+    const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
-    reader.onload = (ev) => {
+    reader.onload = (ev: any) => {
       const img = new Image();
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        const scale = 500 / img.width; 
+        const scale = 500 / img.width; // تكبير الأبعاد لتصبح 500 بكسل بدلاً من 200
         canvas.width = 500;
         canvas.height = img.height * scale;
-        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-        setter(prev => ({ ...prev, image: canvas.toDataURL('image/jpeg', 0.8) }));
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          setter((prev: any) => ({ ...prev, image: canvas.toDataURL('image/jpeg', 0.85) })); // رفع الجودة لـ 85% بدلاً من 5%
+        }
       };
       img.src = ev.target.result;
     };
     reader.readAsDataURL(file);
   };
 
-  const handleJoin = async (overrideCode, currentUser = user) => {
+  const handleJoin = async (overrideCode?: string, currentUser = user) => {
     if (!currentUser) {
       setPublicError('جاري تهيئة الاتصال...');
       return;
@@ -165,10 +177,10 @@ export default function App() {
       setLoading(false);
     }
   };
-};
 
-  const submitVote = async (cid) => {
+  const submitVote = async (cid: string) => {
     if (hasVoted || !user) return;
+    setVoteError('');
     try {
       const totalsRef = doc(db, 'polls', pollId);
       const userVoteRef = doc(db, 'users', user.uid, 'voted_polls', pollId);
@@ -177,35 +189,40 @@ export default function App() {
       await setDoc(userVoteRef, { voted: true, time: Date.now() });
       setHasVoted(true);
     } catch (e) {
-      alert("فشل التصويت، تأكد من الاتصال بالإنترنت.");
+      setVoteError("فشل التصويت، يرجى التحقق من اتصال الإنترنت والمحاولة مجدداً.");
       console.error(e);
     }
   };
 
-  // 🔴 5 ضغطات متتالية سريعة على النجمة
   const handleSecretClick = () => {
     const newCount = secretClicks + 1;
     setSecretClicks(newCount);
-    
     if (clickTimer.current) clearTimeout(clickTimer.current);
 
-    if (newCount >= 5) {
+    if (newCount >= 10) { // تعديل عدد النقرات المطلوبة إلى 10
       setView('admin_login');
       setSecretClicks(0); 
     } else {
-      // المهلة بين الضغطات نصف ثانية (500ms)
       clickTimer.current = setTimeout(() => setSecretClicks(0), 500); 
     }
   };
 
-<div className="flex justify-start mb-6">
-  <button 
-    onClick={() => {setView('home'); setPollId(''); setInputCode('');}} 
-    className="text-slate-400 hover:text-blue-600 font-bold text-sm transition-colors"
-  >
-    &rarr; عودة
-  </button>
-</div>
+  const handleAdminLogin = () => {
+    if (adminPassword === 'Ss1234567890mnbvcxz@@@') {
+      setView('admin_dashboard');
+      setAdminError('');
+    } else {
+      setAdminError('الرقم السري خاطئ');
+    }
+  };
+
+  const handleCreatePoll = async () => {
+    if (!c1.name || !c2.name || !c1.image || !c2.image || !user) {
+      setAdminError('يرجى إكمال جميع بيانات وصور المرشحين.');
+      return;
+    }
+    setIsCreating(true);
+    setAdminError('');
     try {
       const code = Math.random().toString(36).substring(2, 7).toUpperCase();
       const pollRef = doc(db, 'polls', code);
@@ -226,7 +243,7 @@ export default function App() {
     }
   };
 
-  const handleCopyLink = (link) => {
+  const handleCopyLink = (link: string) => {
     navigator.clipboard.writeText(link).then(() => {
       setCopySuccess(true);
       setTimeout(() => setCopySuccess(false), 2000);
@@ -241,19 +258,15 @@ export default function App() {
 
   return (
     <div className="min-h-screen font-sans bg-[#f8f9fb] text-slate-800" dir="rtl">
-      
       <div className="max-w-4xl mx-auto px-4 py-8 md:py-16">
 
-        {/* واجهة الدخول الرئيسية */}
+        {/* 1. واجهة دخول الجمهور */}
         {view === 'home' && (
           <div className="flex flex-col items-center animate-in fade-in zoom-in-95 duration-500 mt-10 md:mt-20">
-            
-            {/* 🔴 النجمة المجاورة للعنوان */}
             <div className="flex items-center justify-center mb-10">
-              {/* النجمة الآن على اليمين وبدون أي تأثيرات عند الوقوف عليها */}
               <div 
                 onClick={handleSecretClick}
-                className="ml-3 text-[#1a56db] cursor-default"
+                className="ml-3 text-[#1a56db] cursor-pointer hover:opacity-70 transition-opacity"
               >
                 <Icons.Sparkles />
               </div>
@@ -267,7 +280,15 @@ export default function App() {
                 هل لديك كود تصويت؟
               </h2>
               
-              <div className="flex flex-col md:flex-row gap-4">
+              {/* التعديل هنا: تبديل أماكن الإدخال والزر */}
+              <div className="flex flex-col md:flex-row-reverse gap-4"> 
+                <button 
+                  onClick={() => handleJoin()}
+                  disabled={!user} 
+                  className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white px-8 py-4 rounded-xl font-bold text-lg transition-colors shadow-sm whitespace-nowrap disabled:opacity-50"
+                >
+                  دخول للتصويت
+                </button>
                 <input 
                   type="text" 
                   placeholder="أدخل الكود هنا"
@@ -276,13 +297,6 @@ export default function App() {
                   onChange={(e) => setInputCode(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleJoin()}
                 />
-                <button 
-                  onClick={() => handleJoin()}
-                  disabled={!user} 
-                  className="bg-[#2563eb] hover:bg-[#1d4ed8] text-white px-8 py-4 rounded-xl font-bold text-lg transition-colors shadow-sm whitespace-nowrap disabled:opacity-50"
-                >
-                  دخول للتصويت
-                </button>
               </div>
               
               {publicError && (
@@ -294,19 +308,12 @@ export default function App() {
           </div>
         )}
 
-        {/* واجهة التصويت */}
+        {/* 2. واجهة التصويت - تمت إزالة زر عودة وتعديل الأزرار ديناميكياً لتشمل اسم المرشح */}
         {view === 'vote' && pollData && (
           <div className="animate-in fade-in slide-in-from-bottom-8 duration-500">
-            <div className="flex justify-start mb-6">
-              <button 
-                onClick={() => {setView('home'); setPollId(''); setInputCode('');}} 
-                className="text-slate-400 hover:text-blue-600 font-bold text-sm transition-colors"
-              >
-                &rarr; عودة
-              </button>
-            </div>
-
+            
             <div className="grid grid-cols-2 gap-4 md:gap-8 mb-6">
+              {/* المرشح الأول */}
               <div className="bg-white rounded-[24px] p-4 shadow-sm border border-slate-100 flex flex-col">
                 <div className="w-full aspect-square bg-[#111] rounded-[16px] overflow-hidden relative mb-5">
                   <img src={pollData.c1.image} alt={pollData.c1.name} className="w-full h-full object-cover" />
@@ -325,10 +332,11 @@ export default function App() {
                       ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
                       : 'bg-[#10b981] hover:bg-[#059669] text-white shadow-sm'}`}
                 >
-                  <Icons.CheckCircle /> صوت لـ {pollData.c1.name} 
-              </button>
+                  <Icons.CheckCircle /> <span>صوت لـ {pollData.c1.name}</span>
+                </button>
               </div>
 
+              {/* المرشح الثاني */}
               <div className="bg-white rounded-[24px] p-4 shadow-sm border border-slate-100 flex flex-col">
                 <div className="w-full aspect-square bg-[#0a0a0a] rounded-[16px] overflow-hidden relative mb-5">
                   <img src={pollData.c2.image} alt={pollData.c2.name} className="w-full h-full object-cover" />
@@ -347,11 +355,18 @@ export default function App() {
                       ? 'bg-slate-100 text-slate-400 cursor-not-allowed' 
                       : 'bg-[#0f172a] hover:bg-black text-white shadow-sm'}`}
                 >
-                  <Icons.CheckCircle /> صوت لـ {pollData.c2.name}
+                  <Icons.CheckCircle /> <span>صوت لـ {pollData.c2.name}</span>
                 </button>
               </div>
             </div>
 
+            {voteError && (
+              <div className="mb-6 bg-red-50 text-red-600 p-4 rounded-xl font-medium text-center border border-red-100 animate-in fade-in">
+                {voteError}
+              </div>
+            )}
+
+            {/* تحليل النتائج المباشرة في الأسفل */}
             <div className="bg-white rounded-[24px] p-6 md:p-8 shadow-sm border border-slate-100">
               <div className="flex justify-between items-center mb-8">
                  <h3 className="text-lg md:text-xl font-bold text-slate-900">تحليل النتائج</h3>
@@ -390,7 +405,7 @@ export default function App() {
           </div>
         )}
 
-        {/* شاشة تسجيل دخول الإدارة */}
+        {/* 3. شاشة تسجيل دخول الإدارة */}
         {view === 'admin_login' && (
           <div className="w-full max-w-sm mx-auto animate-in zoom-in-95 duration-300 mt-20">
             <div className="bg-white p-8 rounded-[24px] shadow-sm border border-slate-100 text-center">
@@ -415,7 +430,7 @@ export default function App() {
           </div>
         )}
 
-        {/* لوحة تحكم إنشاء الأكواد */}
+        {/* 4. لوحة تحكم إنشاء الأكواد */}
         {view === 'admin_dashboard' && (
           <div className="animate-in fade-in duration-500">
             <div className="flex justify-between items-center mb-8 bg-white p-4 rounded-2xl shadow-sm">
